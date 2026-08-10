@@ -21,22 +21,28 @@
         h1 { font-size: 2.5rem; color: var(--accent); }
         
         .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
-        .product-card { background: var(--panel); border-radius: 12px; padding: 20px; text-align: center; display: flex; flex-direction: column; justify: space-between; }
+        .product-card { background: var(--panel); border-radius: 12px; padding: 20px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
         .product-image { height: 180px; background: #fff; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; }
         .product-image img { max-height: 100%; max-width: 100%; object-fit: contain; }
         .price { font-size: 1.5rem; font-weight: bold; color: #4ade80; margin: 10px 0; }
         
         .btn { background: var(--accent); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
         .btn:hover { background: var(--accent-hover); }
+        .btn-danger { background: #ef4444; }
         
         /* Botón flotante Admin */
         .admin-float-btn { position: fixed; bottom: 20px; right: 20px; background: #334155; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 1000; }
         
         /* Modal Admin */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1001; align-items: center; justify-content: center; }
-        .modal-content { background: var(--panel); padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; position: relative; }
+        .modal-content { background: var(--panel); padding: 30px; border-radius: 12px; width: 90%; max-width: 450px; text-align: center; position: relative; }
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 1.5rem; cursor: pointer; color: #94a3b8; }
-        input[type="password"] { width: 100%; padding: 10px; margin: 15px 0; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; text-align: center; font-size: 1.2rem; }
+        input[type="password"], input[type="text"] { width: 100%; padding: 10px; margin: 10px 0; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 1rem; }
+        
+        /* Menú interno del Admin */
+        .admin-options { text-align: left; margin-top: 15px; display: none; }
+        .admin-btn-menu { background: #334155; color: white; border: 1px solid #475569; padding: 12px; border-radius: 8px; margin-bottom: 10px; width: 100%; text-align: left; cursor: pointer; font-size: 0.95rem; }
+        .admin-btn-menu:hover { background: #475569; }
     </style>
 </head>
 <body>
@@ -88,18 +94,29 @@
         <div class="modal-content">
             <span class="close-btn" onclick="closeAdminModal()">&times;</span>
             <h2>Panel Administrativo</h2>
-            <p style="margin-top: 10px; color: #94a3b8;">Ingresa el PIN para entrar:</p>
-            <input type="password" id="pinInput" placeholder="PIN" maxlength="4">
-            <button class="btn" onclick="checkPin()">Ingresar</button>
-            <p id="adminMessage" style="margin-top: 15px; color: #ef4444; display: none;"></p>
+            
+            <!-- Vista de Login -->
+            <div id="loginSection">
+                <p style="margin-top: 10px; color: #94a3b8;">Ingresa el PIN para entrar:</p>
+                <input type="password" id="pinInput" placeholder="PIN" maxlength="4">
+                <button class="btn" onclick="checkPin()">Ingresar</button>
+                <p id="adminMessage" style="margin-top: 15px; color: #ef4444; display: none;"></p>
+            </div>
+
+            <!-- Vista del Menú de Opciones -->
+            <div id="optionsSection" class="admin-options">
+                <p style="color: #4ade80; margin-bottom: 15px; font-weight: bold;">✔ Sesión iniciada</p>
+                <button class="admin-btn-menu" onclick="alert('Opción: Editar Productos y Precios')">📦 Gestionar Productos y Precios</button>
+                <button class="admin-btn-menu" onclick="alert('Opción: Ver Estadísticas de Visitas')">📊 Ver Visitas de la Tienda</button>
+                <button class="admin-btn-menu" onclick="alert('Opción: Configurar Enlace de Facebook')">🔗 Cambiar Enlace de Contacto</button>
+                <button class="btn btn-danger" onclick="logoutAdmin()">Cerrar Panel</button>
+            </div>
         </div>
     </div>
 
     <script>
         function openAdminModal() {
             document.getElementById('adminModal').style.display = 'flex';
-            document.getElementById('pinInput').value = '';
-            document.getElementById('adminMessage').style.display = 'none';
         }
 
         function closeAdminModal() {
@@ -111,18 +128,20 @@
             const message = document.getElementById('adminMessage');
             
             if (pin === '2468') {
-                message.style.color = '#4ade80';
-                message.innerText = '¡Acceso concedido al panel!';
-                message.style.display = 'block';
-                setTimeout(() => {
-                    alert('Bienvenido al Panel Administrativo.');
-                    closeAdminModal();
-                }, 500);
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('optionsSection').style.display = 'block';
             } else {
                 message.style.color = '#ef4444';
                 message.innerText = 'PIN incorrecto. Intenta de nuevo.';
                 message.style.display = 'block';
             }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('pinInput').value = '';
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('optionsSection').style.display = 'none';
+            closeAdminModal();
         }
     </script>
 </body>
