@@ -3,330 +3,548 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store Premium | Alta Gama</title>
+    <title>SmartTech MX | Tienda Oficial de Relojes Inteligentes</title>
     <style>
-        /* --- ESTILOS ULTRA PREMIUM & MODERNO --- */
         :root {
-            --bg-glass: rgba(15, 23, 42, 0.75);
-            --bg-card: rgba(30, 41, 59, 0.6);
+            --bg-primary: #070913;
+            --bg-secondary: #0f172a;
+            --panel-bg: #1e293b;
+            --panel-hover: #273548;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
-            --success: #10b981;
-            --whatsapp: #25d366;
-            --facebook: #1877f2;
-            --mercadopago: #009ee3;
-            --danger: #ef4444;
-            --border: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(59, 130, 246, 0.4);
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --success-color: #4ade80;
+            --danger-color: #ef4444;
+            --border-color: rgba(255, 255, 255, 0.08);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        .video-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -2; background-color: #030712; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, rgba(3, 7, 18, 0.6) 0%, rgba(3, 7, 18, 0.9) 100%); z-index: -1; backdrop-filter: blur(5px); }
-        
-        body { color: var(--text-main); padding-bottom: 100px; overflow-x: hidden; }
-        
-        /* BARRA SUPERIOR DE ANUNCIOS */
-        .top-announcement-bar {
-            background: linear-gradient(90deg, #1d4ed8, #3b82f6, #1d4ed8);
-            color: white; font-size: 0.8rem; font-weight: 700; text-align: center; padding: 8px 15px;
-            letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        body { 
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: var(--bg-primary); 
+            color: var(--text-main); 
+            padding-bottom: 80px; 
+            min-height: 100vh;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* HEADER PROFESIONAL DE LUJO */
+        /* Video de fondo dinámico */
+        #videoBg { 
+            position: fixed; 
+            right: 0; 
+            bottom: 0; 
+            min-width: 100%; 
+            min-height: 100%; 
+            z-index: -1; 
+            object-fit: cover; 
+            opacity: 0.25; 
+            display: none; 
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+        
+        /* Barra de navegación superior */
+        nav {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            padding: 15px 0;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { font-size: 1.4rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo span { color: var(--accent-color); }
+
+        .nav-badges {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Header Principal */
         header { 
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            text-align: center; padding: 35px 20px 25px 20px; border-bottom: 1px solid var(--border); 
+            text-align: center; 
+            padding: 60px 0 40px 0; 
         }
         
-        .brand-badge {
-            display: inline-flex; align-items: center; gap: 8px; background: rgba(52, 211, 153, 0.15);
-            border: 1px solid rgba(52, 211, 153, 0.3); padding: 6px 16px; border-radius: 50px;
-            font-size: 0.75rem; font-weight: 700; color: #34d399; text-transform: uppercase; letter-spacing: 2px;
-            margin-bottom: 15px; box-shadow: 0 0 20px rgba(52, 211, 153, 0.15);
+        h1 { font-size: 3rem; color: var(--accent-color); font-weight: 900; letter-spacing: -0.5px; margin-bottom: 15px; }
+        header p { color: var(--text-muted); font-size: 1.2rem; max-width: 600px; margin: 0 auto; }
+        
+        /* 3 Cuadritos de Enlaces Principales */
+        .quick-links { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; 
+            margin: 40px 0; 
+        }
+        
+        .link-card { 
+            background: var(--bg-secondary); 
+            border: 1px solid var(--border-color); 
+            padding: 25px; 
+            border-radius: 16px; 
+            text-align: center; 
+            text-decoration: none; 
+            color: var(--text-main); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 10px; 
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); 
+        }
+        
+        .link-card:hover { 
+            border-color: var(--accent-color); 
+            transform: translateY(-5px); 
+            background: var(--panel-bg); 
+            box-shadow: 0 20px 35px -10px rgba(59, 130, 246, 0.2);
+        }
+        
+        .link-icon { 
+            font-size: 2.2rem; 
+            background: rgba(59, 130, 246, 0.1); 
+            width: 60px; 
+            height: 60px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 50%; 
+            margin-bottom: 5px; 
         }
 
-        h1 { 
-            font-size: 2.8rem; font-weight: 900; letter-spacing: -1px;
-            background: linear-gradient(135deg, #ffffff 30%, #93c5fd 100%); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        .link-card h3 { font-size: 1.2rem; font-weight: 700; }
+        .link-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Secciones de Productos */
+        .section-title { 
+            margin: 50px 0 25px 0; 
+            font-size: 2rem; 
+            font-weight: 800; 
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        p.subtitle { color: var(--text-muted); margin-top: 8px; font-size: 1.05rem; font-weight: 400; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.5; }
-
-        /* BARRA DE CONFIANZA / BENEFICIOS */
-        .trust-banner {
-            max-width: 1100px; margin: 30px auto 10px auto; padding: 0 20px;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px;
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
         }
-        .trust-item {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 12px;
-            padding: 15px; display: flex; align-items: center; gap: 15px; backdrop-filter: blur(10px);
+        
+        .products { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 30px; 
         }
-        .trust-icon { font-size: 1.8rem; background: rgba(59, 130, 246, 0.15); padding: 10px; border-radius: 10px; }
-        .trust-text h4 { font-size: 0.9rem; font-weight: 700; color: white; }
-        .trust-text p { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
-
-        /* CONTENEDOR DE PRODUCTOS */
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-        .products { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; margin-top: 20px; }
         
         .product-card { 
-            background: var(--bg-card); border-radius: 20px; padding: 25px; text-align: center; 
-            display: flex; flex-direction: column; justify-content: space-between; 
-            border: 1px solid var(--border); backdrop-filter: blur(15px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s;
+            background: var(--bg-secondary); 
+            border-radius: 20px; 
+            padding: 25px; 
+            border: 1px solid var(--border-color); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .product-card:hover { transform: translateY(-10px); box-shadow: 0 30px 60px rgba(0,0,0,0.6); border-color: var(--border-glow); }
-        
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .badge-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-color);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         .product-image { 
-            height: 220px; background: rgba(0, 0, 0, 0.25); border-radius: 14px; margin-bottom: 20px; 
-            display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 15px; 
-            border: 1px solid rgba(255,255,255,0.03); 
+            height: 220px; 
+            background: #ffffff; 
+            border-radius: 14px; 
+            margin-bottom: 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            padding: 15px; 
         }
-        .product-image img { max-height: 100%; max-width: 100%; object-fit: contain; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6)); transition: transform 0.5s ease; }
-        .product-card:hover .product-image img { transform: scale(1.08); }
         
-        h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; color: white; letter-spacing: -0.5px; }
-        .desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px; flex-grow: 1; }
-        .price-box { display: flex; align-items: baseline; justify-content: center; gap: 5px; margin-bottom: 20px; }
-        .price { font-size: 2rem; font-weight: 900; color: #34d399; text-shadow: 0 0 25px rgba(52, 211, 153, 0.3); }
-        .currency { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .product-image img { max-height: 100%; max-width: 100%; object-fit: contain; transition: transform 0.3s ease; }
+        .product-card:hover .product-image img { transform: scale(1.05); }
         
-        /* BOTONES MULTIPLES DE ALTA GAMA */
-        .button-group { display: flex; flex-direction: column; gap: 10px; }
+        .product-info h3 { font-size: 1.35rem; margin-bottom: 8px; font-weight: 700; }
+        .product-info p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
+        
+        .price-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .price { font-size: 1.7rem; font-weight: 900; color: var(--success-color); }
+        .stock-status { font-size: 0.85rem; color: var(--success-color); display: flex; align-items: center; gap: 5px; }
+
         .btn { 
-            background: var(--primary); color: white; border: none; padding: 12px 18px; border-radius: 12px; 
-            cursor: pointer; font-weight: 700; font-size: 0.95rem; width: 100%; display: flex; align-items: center; 
-            justify-content: center; gap: 10px; text-decoration: none; text-align: center; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+            background: var(--accent-color); 
+            color: white; 
+            border: none; 
+            padding: 14px 20px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-weight: 700; 
+            width: 100%; 
+            font-size: 1rem;
+            transition: background 0.2s ease, transform 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
         }
-        .btn:hover { transform: translateY(-3px); filter: brightness(1.15); box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
         
-        .btn-mp { background: linear-gradient(135deg, #00b1ea, #009ee3); }
-        .btn-wa { background: linear-gradient(135deg, #2ecc71, #25d366); }
-        .btn-fb { background: linear-gradient(135deg, #2563eb, #1877f2); }
-        
-        .btn-secondary { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); }
-        .btn-danger { background: var(--danger); }
-        .btn-success { background: var(--success); }
-        
-        /* CHECKBOXES PERSONALIZADAS PARA EL PANEL */
-        .checkbox-label {
-            display: flex; align-items: center; gap: 12px; cursor: pointer; color: white; font-size: 0.9rem;
-            margin: 12px 0; text-transform: none; letter-spacing: normal; font-weight: 500; background: rgba(255,255,255,0.03);
-            padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);
-        }
-        .checkbox-label input { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; }
+        .btn:hover { background: var(--accent-hover); }
+        .btn:active { transform: scale(0.98); }
 
-        /* BOTÓN FLOTANTE ADMIN */
+        /* Sección de Garantías / Confianza Profesional */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin: 60px 0 30px 0;
+            padding: 40px;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            background: rgba(59, 130, 246, 0.1);
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .feature-text h4 { font-size: 1.05rem; margin-bottom: 4px; font-weight: 700; }
+        .feature-text p { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 60px;
+        }
+        
+        /* Botón Flotante Admin Pro */
         .admin-float-btn { 
-            position: fixed; bottom: 25px; right: 25px; background: rgba(15, 23, 42, 0.85); 
-            backdrop-filter: blur(12px); color: white; border: 1px solid rgba(255,255,255,0.2); 
-            width: 60px; height: 60px; border-radius: 50%; cursor: pointer; font-size: 1.6rem; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7); z-index: 1000; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            position: fixed; 
+            bottom: 30px; 
+            right: 30px; 
+            background: var(--panel-bg); 
+            border: 1px solid rgba(255,255,255,0.15); 
+            width: 60px; 
+            height: 60px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            font-size: 1.6rem; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6); 
+            z-index: 1000; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
         }
-        .admin-float-btn:hover { transform: rotate(90deg) scale(1.15); border-color: var(--primary); }
-        
-        /* MODAL ADMINISTRATIVO PREMIUM */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 7, 18, 0.92); z-index: 1001; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
-        .modal-content { background: #0f172a; padding: 35px 30px; border-radius: 24px; width: 90%; max-width: 520px; text-align: center; position: relative; max-height: 85vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 30px 60px rgba(0,0,0,0.9); }
-        .close-btn { position: absolute; top: 20px; right: 25px; font-size: 2rem; cursor: pointer; color: var(--text-muted); transition: color 0.2s; }
-        .close-btn:hover { color: white; }
-        
-        label { display: block; text-align: left; font-size: 0.8rem; font-weight: 700; color: #94a3b8; margin: 18px 0 6px 0; text-transform: uppercase; letter-spacing: 1.2px; }
-        input[type="text"], input[type="password"], input[type="number"], input[type="file"] { width: 100%; padding: 14px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.4); color: white; font-size: 1rem; outline: none; transition: border-color 0.3s; }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
-        
-        .admin-view { text-align: left; margin-top: 15px; display: none; }
-        .admin-nav { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
-        .admin-nav button { padding: 10px 18px; font-size: 0.85rem; flex-shrink: 0; border-radius: 10px; }
-        
-        .edit-box { background: rgba(0,0,0,0.35); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.06); }
-        
-        .admin-list { max-height: 190px; overflow-y: auto; margin-bottom: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.45); padding: 5px; }
-        .admin-list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .admin-list-item:last-child { border-bottom: none; }
-        .admin-item-title { font-size: 0.95rem; color: white; font-weight: 600; text-align: left; flex-grow: 1; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; margin-right: 10px; }
-        .admin-item-actions button { background: none; border: none; font-size: 1.3rem; cursor: pointer; margin-left: 10px; transition: transform 0.2s; }
-        .admin-item-actions button:hover { transform: scale(1.25); }
 
-        .stat-card { background: rgba(0,0,0,0.4); padding: 25px; border-radius: 16px; text-align: center; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.06); }
-        .stat-num { font-size: 3.5rem; font-weight: 900; color: var(--primary); margin-top: 10px; text-shadow: 0 0 30px rgba(59, 130, 246, 0.4); }
-        .preview-img { width: 100%; height: 160px; object-fit: contain; background: rgba(255,255,255,0.04); border-radius: 10px; margin-top: 10px; display: none; padding: 5px; border: 1px solid rgba(255,255,255,0.05); }
+        .admin-float-btn:hover { 
+            transform: scale(1.1) rotate(45deg); 
+            background: var(--accent-color); 
+            border-color: var(--accent-color);
+        }
+
+        /* Modal del Panel Administrativo */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(5, 8, 15, 0.85); 
+            backdrop-filter: blur(8px); 
+            z-index: 1001; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px;
+        }
+
+        .modal-content { 
+            background: var(--bg-secondary); 
+            padding: 35px; 
+            border-radius: 24px; 
+            width: 100%; 
+            max-width: 550px; 
+            border: 1px solid rgba(255,255,255,0.12); 
+            max-height: 85vh; 
+            overflow-y: auto; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .modal-header h2 { font-size: 1.5rem; font-weight: 800; color: var(--text-main); }
+        
+        .close-btn { 
+            background: rgba(255,255,255,0.05);
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 1.2rem; 
+            cursor: pointer; 
+            color: var(--text-muted); 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .close-btn:hover { background: var(--danger-color); color: white; }
+        
+        .admin-group { 
+            background: rgba(0, 0, 0, 0.25); 
+            padding: 20px; 
+            border-radius: 16px; 
+            margin-bottom: 20px; 
+            border: 1px solid var(--border-color); 
+        }
+
+        .admin-group h3 { font-size: 1.05rem; margin-bottom: 12px; color: var(--accent-color); font-weight: 700; }
+        .admin-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
+        
+        .admin-group input[type="text"], 
+        .admin-group input[type="file"] { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 12px; 
+            border-radius: 10px; 
+            border: 1px solid #475569; 
+            background: var(--bg-primary); 
+            color: white; 
+            font-size: 0.9rem; 
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .admin-group input[type="text"]:focus { border-color: var(--accent-color); }
+        .admin-group input[type="file"] { cursor: pointer; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
-    <div id="topAnnouncementBar" class="top-announcement-bar">🔥 Envíos seguros y garantizados a todo México • Compra 100% Protegida</div>
+    <!-- Video de fondo configurable -->
+    <video id="videoBg" autoplay muted loop></video>
 
-    <video id="bgVideo" class="video-bg" autoplay loop muted playsinline></video>
-    <div class="overlay"></div>
+    <!-- Barra de navegación profesional -->
+    <nav>
+        <div class="container nav-content">
+            <a href="#" class="logo">⚡ Smart<span>Tech</span></a>
+            <div class="nav-badges">
+                <span>🛡️ Compra Segura</span>
+                <span>🇲🇽 Envíos a todo México</span>
+            </div>
+        </div>
+    </nav>
 
-    <header>
-        <div class="brand-badge">✨ Tienda Oficial Autorizada</div>
-        <h1 id="displayStoreName">Smartwatches Premium</h1>
-        <p class="subtitle" id="displayStoreDesc">Tecnología de alta gama, diseño vanguardista y rendimiento superior al mejor precio del mercado.</p>
+    <!-- Encabezado -->
+    <header class="container">
+        <h1>Smartwatches Exclusivos</h1>
+        <p>Descubre la tecnología de última generación diseñada para potenciar tu estilo de vida y conectarte al instante.</p>
     </header>
 
-    <div id="trustBannerContainer" class="trust-banner">
-        <div class="trust-item">
-            <div class="trust-icon">🛡️</div>
-            <div class="trust-text">
-                <h4>Garantía de Fábrica</h4>
-                <p>Productos probados y certificados</p>
-            </div>
-        </div>
-        <div class="trust-item">
-            <div class="trust-icon">💳</div>
-            <div class="trust-text">
-                <h4>Pagos 100% Seguros</h4>
-                <p>Tarjetas, OXXO o transferencia</p>
-            </div>
-        </div>
-        <div class="trust-item">
-            <div class="trust-icon">⚡</div>
-            <div class="trust-text">
-                <h4>Atención Directa</h4>
-                <p>Soporte por WhatsApp personalizado</p>
-            </div>
-        </div>
-    </div>
-
     <main class="container">
-        <div class="products" id="productsContainer"></div>
+        <!-- 3 Cuadritos para Enlaces (Mercado Pago, Facebook, WhatsApp) -->
+        <div class="quick-links">
+            <a id="cardMP" href="https://mercadopago.com.mx" target="_blank" class="link-card">
+                <div class="link-icon">💳</div>
+                <h3>Mercado Pago</h3>
+                <p>Plataforma de pagos y transferencias seguras</p>
+            </a>
+            
+            <a id="cardFB" href="https://facebook.com" target="_blank" class="link-card">
+                <div class="link-icon">👥</div>
+                <h3>Página de Facebook</h3>
+                <p>Síguenos, reseñas y atención directa</p>
+            </a>
+            
+            <a id="cardWA" href="https://whatsapp.com" target="_blank" class="link-card">
+                <div class="link-icon">💬</div>
+                <h3>Chat de WhatsApp</h3>
+                <p>Resuelve tus dudas y finaliza tu pedido</p>
+            </a>
+        </div>
+
+        <h2 class="section-title">Catálogo Destacado</h2>
+        
+        <!-- Tarjetas de Productos -->
+        <section class="products">
+            <!-- Producto 1 -->
+            <div class="product-card">
+                <span class="badge-tag">Más Vendido</span>
+                <div class="product-image">
+                    <img id="imgProd1" src="https://i5.walmartimages.com/seo/Smartwatch-Deportivo-Inteligente-Pantalla-Tactil-Notificaciones_4a8996b7-87eb-4b2a-8998-ef2fb4c75945.jpg" alt="Smartwatch Deportivo">
+                </div>
+                <div class="product-info">
+                    <h3 id="titleProd1">SmartWatch Pro</h3>
+                    <p>Monitoreo avanzado de salud, modo multideporte y alta resistencia al agua.</p>
+                </div>
+                <div>
+                    <div class="price-row">
+                        <div class="price">$799 MXN</div>
+                        <div class="stock-status">🟢 Disponible</div>
+                    </div>
+                    <button class="btn" onclick="checkout('SmartWatch Pro')">Comprar por Facebook</button>
+                </div>
+            </div>
+
+            <!-- Producto 2 -->
+            <div class="product-card">
+                <span class="badge-tag">Nuevo</span>
+                <div class="product-image">
+                    <img id="imgProd2" src="https://i5.walmartimages.com/seo/Smartwatch-Con-Llamadas-Bluetooth-Notificaciones-Reloj-Inteligente_2ff8fb28-20d0-42f8-9419-756ef2494101.jpg" alt="Smartwatch Llamadas">
+                </div>
+                <div class="product-info">
+                    <h3 id="titleProd2">SmartWatch Llamadas</h3>
+                    <p>Micrófono y altavoz integrados para contestar llamadas directamente desde la muñeca.</p>
+                </div>
+                <div>
+                    <div class="price-row">
+                        <div class="price">$499 MXN</div>
+                        <div class="stock-status">🟢 Disponible</div>
+                    </div>
+                    <button class="btn" onclick="checkout('SmartWatch Llamadas')">Comprar por Facebook</button>
+                </div>
+            </div>
+
+            <!-- Producto 3 -->
+            <div class="product-card">
+                <span class="badge-tag">Oferta</span>
+                <div class="product-image">
+                    <img id="imgProd3" src="https://i5.walmartimages.com/seo/Reloj-Inteligente-Smartwatch-Band-Notificaciones_0c4c4e7f-b2e1-4c10-9c2b-e10b1a052b91.jpg" alt="Smartwatch Básico">
+                </div>
+                <div class="product-info">
+                    <h3 id="titleProd3">SmartWatch Básico</h3>
+                    <p>Diseño minimalista, conteo de pasos diario y visualización inteligente de notificaciones.</p>
+                </div>
+                <div>
+                    <div class="price-row">
+                        <div class="price">$299 MXN</div>
+                        <div class="stock-status">🟢 Disponible</div>
+                    </div>
+                    <button class="btn" onclick="checkout('SmartWatch Básico')">Comprar por Facebook</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Beneficios / Valor Agregado -->
+        <section class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">🚀</div>
+                <div class="feature-text">
+                    <h4>Envíos Garantizados</h4>
+                    <p>Despacho inmediato a todo el país con número de guía.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-text">
+                    <h4>Pagos Confiables</h4>
+                    <p>Transacciones directas y seguras a través de plataformas oficiales.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">⭐</div>
+                <div class="feature-text">
+                    <h4>Garantía de Fábrica</h4>
+                    <p>Dispositivos probados y con respaldo ante cualquier detalle.</p>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <button class="admin-float-btn" onclick="openAdminModal()" title="Panel de Administración">⚙️</button>
+    <!-- Footer Profesional -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 SmartTech MX. Todos los derechos reservados.</p>
+            <p style="margin-top: 8px; font-size: 0.8rem;">Plataforma de comercio electrónico independiente gestionada de manera exclusiva.</p>
+        </div>
+    </footer>
 
+    <!-- Botón flotante para abrir el panel administrativo -->
+    <button class="admin-float-btn" onclick="openAdmin()" title="Panel Administrativo">⚙️</button>
+
+    <!-- Modal del Panel Administrativo -->
     <div id="adminModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeAdminModal()">&times;</span>
-            <h2 style="color:white; margin-bottom:20px; font-weight:800; font-size: 1.5rem;">Panel de Control</h2>
+            <div class="modal-header">
+                <h2>Panel Administrativo 10/10</h2>
+                <button class="close-btn" onclick="closeAdmin()">&times;</button>
+            </div>
             
-            <div id="loginSection">
-                <p style="color: var(--text-muted); margin-bottom: 15px; font-size: 0.9rem;">Ingresa tu PIN de Acceso:</p>
-                <input type="password" id="pinInput" placeholder="****" maxlength="4" style="text-align: center; font-size: 2rem; letter-spacing: 12px;">
-                <button class="btn btn-primary" style="margin-top: 20px;" onclick="checkPin()">Acceder al Sistema</button>
-                <p id="adminMessage" style="margin-top: 15px; color: var(--danger); display: none; font-weight: bold;"></p>
+            <!-- Configurar Enlaces de los 3 cuadritos -->
+            <div class="admin-group">
+                <h3>🔗 Enlaces Rápidos</h3>
+                <label>Enlace de Mercado Pago:</label>
+                <input type="text" id="inputMP" placeholder="https://mercadopago.com.mx/...">
+                
+                <label>Enlace de Facebook:</label>
+                <input type="text" id="inputFB" placeholder="https://facebook.com/tu-pagina">
+                
+                <label>Enlace de WhatsApp:</label>
+                <input type="text" id="inputWA" placeholder="https://wa.me/52...">
+                <button class="btn" onclick="saveLinks()" style="margin-top: 5px;">Actualizar Enlaces</button>
             </div>
 
-            <div id="optionsSection" class="admin-view">
-                <div class="admin-nav">
-                    <button class="btn btn-primary" onclick="showTab('productsTab')" id="btnTabProd">📦 Productos</button>
-                    <button class="btn btn-secondary" onclick="showTab('configTab')" id="btnTabConf">⚙️ Ajustes</button>
-                    <button class="btn btn-secondary" onclick="showTab('statsTab')" id="btnTabStat">📊 Visitas</button>
-                </div>
-
-                <div id="productsTab" class="tab-content">
-                    <button class="btn btn-success" style="margin-bottom: 15px;" onclick="addNewProduct()">+ Crear Nuevo Reloj</button>
-
-                    <p style="text-align: left; font-size: 0.8rem; color: #94a3b8; margin-bottom: 5px;">Tus productos (Toca ✏️ para editar o 🗑️ para borrar):</p>
-                    <div id="adminProductList" class="admin-list"></div>
-
-                    <div class="edit-box" id="editFormBox" style="display:none;">
-                        <h3 style="color:#34d399; margin-bottom: 10px; font-size: 1.1rem;">Editando Producto</h3>
-                        <label>Nombre del Reloj:</label>
-                        <input type="text" id="editTitle">
-                        
-                        <label>Descripción corta:</label>
-                        <input type="text" id="editDesc">
-                        
-                        <label>Precio (MXN):</label>
-                        <input type="number" id="editPrice">
-                        
-                        <label style="color:#00eeff;">💳 Link de Mercado Pago (Pago directo):</label>
-                        <input type="text" id="editPayLink" placeholder="Ej: https://mpago.la/tu-link">
-
-                        <label style="color:#25d366;">💬 Link de WhatsApp (Mensaje directo):</label>
-                        <input type="text" id="editWaLink" placeholder="Ej: https://wa.me/5215555555555?text=Hola">
-
-                        <label style="color:#1877f2;">📘 Link de Facebook (Publicación):</label>
-                        <input type="text" id="editFbLink" placeholder="Ej: https://facebook.com/tu-post">
-
-                        <label>Foto del Reloj (Galería):</label>
-                        <input type="file" id="editImageFile" accept="image/*" onchange="handleImageUpload(event)">
-                        <img id="imgPreview" class="preview-img" alt="Vista previa">
-                        
-                        <button class="btn btn-primary" style="margin-top: 15px;" onclick="saveProductChanges()">💾 Guardar Cambios</button>
-                    </div>
-                </div>
-
-                <div id="configTab" class="tab-content" style="display:none;">
-                    <div class="edit-box">
-                        <label>Nombre de la Tienda:</label>
-                        <input type="text" id="storeNameInput">
-                        
-                        <label>Subtítulo Profesional:</label>
-                        <input type="text" id="storeDescInput">
-
-                        <label style="color:#34d399; margin-top:20px;">🎛️ Visibilidad de Secciones (Mostrar / Ocultar):</label>
-                        
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="showAnnouncementCheck"> Mostrar barra superior de anuncios (Envíos seguros)
-                        </label>
-                        
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="showTrustCheck"> Mostrar sección de confianza y garantías
-                        </label>
-                        
-                        <label style="color:#34d399; margin-top:20px;">🎬 Subir Video de Fondo (Galería):</label>
-                        <input type="file" id="bgVideoFile" accept="video/*" onchange="handleVideoUpload(event)">
-                    </div>
-                    <button class="btn btn-success" onclick="saveStoreConfig()">💾 Guardar Todos los Ajustes</button>
-                    
-                    <hr style="border-color: rgba(255,255,255,0.1); margin: 25px 0;">
-                    <button class="btn btn-secondary" style="border: 1px solid #ef4444; color: #ef4444;" onclick="resetStoreData()">🚨 Borrar Toda la Tienda (Reiniciar)</button>
-                </div>
-
-                <div id="statsTab" class="tab-content" style="display:none;">
-                    <div class="stat-card">
-                        <p style="color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Visitas Totales a la Tienda</p>
-                        <div class="stat-num" id="visitCount">0</div>
-                    </div>
-                </div>
-
-                <button class="btn btn-secondary" onclick="logoutAdmin()" style="margin-top: 25px; width:100%;">Cerrar Panel Seguro</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const PIN_ACCESO = '2468';
-        let isAdminLoggedIn = false;
-        let tempBase64Image = "";
-        let tempVideoFile = null;
-        let currentEditIndex = null;
-
-        const defaultProducts = [
-            { 
-                title: "SmartWatch Pro Elite X", 
-                desc: "Monitoreo cardíaco avanzado, pantalla AMOLED ultra brillante, llamadas Bluetooth y resistencia al agua IP68.", 
-                price: 899, 
-                image: "https://i5.walmartimages.com/seo/Smartwatch-Deportivo-Inteligente-Pantalla-Tactil-Notificaciones_4a8996b7-87eb-4b2a-8998-ef2fb4c75945.jpg", 
-                payLink: "", 
-                waLink: "", 
-                fbLink: "" 
-            }
-        ];
-        const defaultVideoUrl = "https://cdn.pixabay.com/video/2020/05/25/40140-424812648_large.mp4";
-
-        let db;
-        const request = indexedDB.open("StoreAdvancedDB", 1);
-        request.onupgradeneeded = function(e) {
-            db = e.target.result;
-            if(!db.objectStoreNames.contains("mediaStore")) db.createObjectStore("mediaStore", { keyPath: "id" });
-        };
-        request.onsuccess = function(e) { db = e.target.result; loadStoreInfo(); };
-        request.onerror = function() { loadStoreInfo(); };
-
-        function initApp() { trackVisits(); renderProducts(); }
-
-        function trackVisits() {
-            let
+            <!-- Seleccionar fotos de galería para los productos (Con Persistencia LocalStorage) -->
+            <div class="admin-group">
+                <h3>📸 Galería de Productos (Guardado Automático)</h3>
+           
