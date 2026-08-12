@@ -13,6 +13,7 @@
         .btn { background: var(--accent-color); color: white; padding: 15px; border-radius: 10px; text-align: center; display: block; cursor: pointer; border: none; width: 100%; font-weight: bold; margin-top: 10px; text-decoration: none; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999999; padding: 20px; overflow-y: auto; }
         .admin-group { background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .info-box { background: #000; padding: 10px; border-radius: 5px; font-family: monospace; color: #0f0; margin-top: 5px; font-size: 0.9rem; }
         input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #444; background: #000; color: #fff; }
     </style>
 </head>
@@ -22,42 +23,74 @@
 
     <div class="container">
         <h1 id="mainTitle">SmartTech MX</h1>
-        <div id="linkContainer">
-            <a id="btnMP" href="#" class="btn">Mercado Pago</a>
-            <a id="btnFB" href="#" class="btn">Facebook</a>
-            <a id="btnWA" href="#" class="btn">WhatsApp</a>
-        </div>
         <div id="productContainer" style="margin-top: 20px;"></div>
     </div>
 
-    <button class="btn" style="position:fixed; bottom:20px; right:20px; width:60px; height:60px; border-radius:50%; z-index:999999" onclick="document.getElementById('modal').style.display='block'">⚙️</button>
+    <!-- Botón flotante protegido -->
+    <button class="btn" style="position:fixed; bottom:20px; right:20px; width:60px; height:60px; border-radius:50%; z-index:999999" onclick="checkAdmin()">⚙️</button>
 
+    <!-- Panel Administrativo -->
     <div id="modal" class="modal">
         <div class="container">
-            <h2>Panel Administrativo</h2>
+            <h2>Panel Administrativo Total</h2>
             
+            <!-- 1. Datos Educativos del Visitante -->
             <div class="admin-group">
-                <label>Nombre de la Página:</label>
-                <input type="text" id="inTitle" onchange="saveConfig('sTitle', this.value)">
-                <label>Links (MP, FB, WA):</label>
-                <input type="text" id="inMP" placeholder="Link Mercado Pago" onchange="saveConfig('sMP', this.value)">
-                <input type="text" id="inFB" placeholder="Link Facebook" onchange="saveConfig('sFB', this.value)">
-                <input type="text" id="inWA" placeholder="Link WhatsApp" onchange="saveConfig('sWA', this.value)">
+                <h3>📊 Registro del Visitante (Educativo)</h3>
+                <div id="visitorInfo" class="info-box">Cargando datos de red...</div>
             </div>
 
+            <!-- 2. Configuración General de la Página -->
             <div class="admin-group">
-                <label>Sonido de Bienvenida:</label>
+                <h3>⚙️ Configuración del Sitio</h3>
+                <label>Nombre de la Página:</label>
+                <input type="text" id="inTitle" onchange="saveConfig('sTitle', this.value)">
+                <label>Sonido de Bienvenida (Elegir archivo del celular):</label>
                 <input type="file" accept="audio/*" onchange="handleFile(event, 'welcomeSound', 'sAudio')">
                 <button class="btn" onclick="addProduct()">+ Agregar Nuevo Producto</button>
             </div>
 
+            <!-- 3. Lista de Productos Dinámicos -->
+            <h3>📦 Gestión de Productos</h3>
             <div id="adminProductList"></div>
             
-            <button class="btn" style="background:red" onclick="document.getElementById('modal').style.display='none'">Cerrar Panel</button>
+            <button class="btn" style="background:red; margin-top: 20px;" onclick="document.getElementById('modal').style.display='none'">Cerrar Panel</button>
         </div>
     </div>
 
     <script>
+        const PASSWORD_SEGURA = "2486"; 
+
+        // Obtener datos del visitante para fines educativos
+        async function fetchVisitorData() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                const time = new Date().toLocaleString();
+                const device = navigator.userAgent;
+                
+                document.getElementById('visitorInfo').innerHTML = `
+                    IP: ${data.ip}<br>
+                    Ciudad: ${data.city}<br>
+                    País: ${data.country_name}<br>
+                    Hora de visita: ${time}<br>
+                    Dispositivo: ${device.split('(')[1] ? device.split('(')[1].split(')')[0] : device}
+                `;
+            } catch (e) {
+                document.getElementById('visitorInfo').innerText = "No se pudieron obtener los datos de red.";
+            }
+        }
+
+        function checkAdmin() {
+            const pass = prompt("Ingresa la contraseña de administrador:");
+            if (pass === PASSWORD_SEGURA) {
+                fetchVisitorData();
+                document.getElementById('modal').style.display = 'block';
+            } else {
+                alert("Acceso denegado. Contraseña incorrecta.");
+            }
+        }
+
         let products = JSON.parse(localStorage.getItem('myProducts')) || [];
 
         function render() {
@@ -67,12 +100,24 @@
             adminList.innerHTML = '';
 
             products.forEach((p, i) => {
-                container.innerHTML += `<div class="product-card"><h2>${p.name}</h2><p>${p.price}</p></div>`;
+                // Vista principal de la tienda
+                container.innerHTML += `
+                    <div class="product-card">
+                        <img src="${p.img}">
+                        <h2>${p.name}</h2>
+                        <p>${p.price}</p>
+                    </div>`;
+                
+                // Vista dentro del panel administrativo
                 adminList.innerHTML += `
                     <div class="admin-group">
-                        <input type="text" value="${p.name}" onchange="updateProd(${i}, 'name', this.value)" placeholder="Nombre">
-                        <input type="text" value="${p.price}" onchange="updateProd(${i}, 'price', this.value)" placeholder="Precio">
-                        <button class="btn" style="background:red" onclick="deleteProd(${i})">Eliminar</button>
+                        <label>Nombre del Producto:</label>
+                        <input type="text" value="${p.name}" onchange="updateProd(${i}, 'name', this.value)">
+                        <label>Precio:</label>
+                        <input type="text" value="${p.price}" onchange="updateProd(${i}, 'price', this.value)">
+                        <label>Foto (Elegir de galería):</label>
+                        <input type="file" accept="image/*" onchange="handleProdImage(event, ${i})">
+                        <button class="btn" style="background:red; margin-top: 10px;" onclick="deleteProd(${i})">Eliminar Este Producto</button>
                     </div>`;
             });
             localStorage.setItem('myProducts', JSON.stringify(products));
@@ -85,21 +130,52 @@
 
         function handleFile(e, id, key) {
             const reader = new FileReader();
-            reader.onload = (ev) => { localStorage.setItem(key, ev.target.result); document.getElementById(id).src = ev.target.result; alert('Guardado'); };
+            reader.onload = (ev) => { 
+                localStorage.setItem(key, ev.target.result); 
+                document.getElementById(id).src = ev.target.result; 
+                alert('¡Audio guardado exitosamente!'); 
+            };
             reader.readAsDataURL(e.target.files[0]);
         }
 
-        function addProduct() { products.push({name: "Nuevo", price: "$0"}); render(); }
-        function deleteProd(i) { products.splice(i, 1); render(); }
-        function updateProd(i, k, v) { products[i][k] = v; render(); }
+        function handleProdImage(e, index) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                products[index].img = ev.target.result;
+                render();
+                alert('¡Imagen del producto actualizada!');
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        function addProduct() { 
+            products.push({name: "Nuevo Producto", price: "$0", img: "https://via.placeholder.com/200"}); 
+            render(); 
+        }
+
+        function deleteProd(i) { 
+            products.splice(i, 1); 
+            render(); 
+        }
+
+        function updateProd(index, key, val) { 
+            products[index][key] = val; 
+            localStorage.setItem('myProducts', JSON.stringify(products));
+        }
 
         window.onload = () => {
-            if(localStorage.getItem('sTitle')) { document.getElementById('mainTitle').innerText = localStorage.getItem('sTitle'); document.getElementById('docTitle').innerText = localStorage.getItem('sTitle'); }
+            if(localStorage.getItem('sTitle')) { 
+                document.getElementById('mainTitle').innerText = localStorage.getItem('sTitle'); 
+                document.getElementById('docTitle').innerText = localStorage.getItem('sTitle'); 
+                document.getElementById('inTitle').value = localStorage.getItem('sTitle');
+            }
             if(localStorage.getItem('sAudio')) document.getElementById('welcomeSound').src = localStorage.getItem('sAudio');
-            if(localStorage.getItem('sMP')) document.getElementById('btnMP').href = localStorage.getItem('sMP');
-            if(localStorage.getItem('sFB')) document.getElementById('btnFB').href = localStorage.getItem('sFB');
-            if(localStorage.getItem('sWA')) document.getElementById('btnWA').href = localStorage.getItem('sWA');
-            document.body.addEventListener('click', () => { document.getElementById('welcomeSound').play(); }, { once: true });
+            
+            document.body.addEventListener('click', () => { 
+                const audio = document.getElementById('welcomeSound');
+                if(audio.src) audio.play(); 
+            }, { once: true });
+            
             render();
         };
     </script>
