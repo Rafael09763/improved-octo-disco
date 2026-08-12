@@ -94,8 +94,10 @@
         <div id="productContainer"></div>
     </div>
 
+    <!-- Botón flotante corregido -->
     <button class="btn" style="position:fixed; bottom:30px; right:30px; width:65px; height:65px; border-radius:50%; z-index:999999; padding:0; box-shadow: 0 5px 20px rgba(37, 99, 235, 0.5);" onclick="checkAdmin()">⚙️</button>
 
+    <!-- Panel Administrativo -->
     <div id="modal" class="modal">
         <div class="container">
             <h2 style="color: var(--accent-color);">Panel Administrativo Profesional</h2>
@@ -142,13 +144,14 @@
             }
         }
 
+        // Función checkAdmin corregida
         function checkAdmin() {
             const pass = prompt("Ingresa la contraseña de administrador:");
             if (pass === PASSWORD_SEGURA) {
                 fetchVisitorData();
                 document.getElementById('modal').style.display = 'block';
-            } else {
-                alert("Acceso denegado.");
+            } else if (pass !== null) {
+                alert("Contraseña incorrecta. Intenta de nuevo.");
             }
         }
 
@@ -278,4 +281,9 @@
 
         function saveConfig(key, val) {
             localStorage.setItem(key, val);
-            // No recargamos
+            location.reload();
+        }
+
+        function handleFile(e, id, key) {
+            const reader = new FileReader();
+            reader.
