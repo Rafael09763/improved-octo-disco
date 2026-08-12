@@ -5,25 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="docTitle">SmartTech MX</title>
     <style>
-        :root { --bg-primary: #070913; --bg-secondary: #0f172a; --accent-color: #3b82f6; --text-main: #f8fafc; --text-muted: #94a3b8; }
-        body { font-family: sans-serif; background: var(--bg-primary); color: var(--text-main); margin: 0; padding-bottom: 100px; }
+        /* --- Fondo de Universo Profesional --- */
+        :root { 
+            --bg-primary: #05070a; /* Negro azulado muy oscuro */
+            --bg-secondary: rgba(17, 24, 39, 0.85); /* Fondo semitransparente para tarjetas */
+            --accent-color: #2563eb; 
+            --success-color: #10b981; 
+            --text-main: #f3f4f6; 
+            --text-muted: #9ca3af; 
+            --border-color: #1f2937;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            padding-bottom: 100px; 
+            color: var(--text-main);
+            
+            /* Imagen de fondo de estrellas (patrón sutil) */
+            background-color: var(--bg-primary);
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            background-attachment: fixed; /* El fondo se queda fijo al hacer scroll */
+        }
+
+        /* Efecto sutil de nebulosa/luz lejana */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
         .container { max-width: 900px; margin: auto; padding: 20px; }
         
-        .product-card { background: var(--bg-secondary); padding: 20px; border-radius: 20px; margin-bottom: 25px; text-align: center; border: 1px solid #1e293b; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        .product-card img { width: 100%; height: 240px; object-fit: contain; background: white; border-radius: 12px; margin-bottom: 15px; }
-        
-        /* Galería de fotos múltiples por producto */
+        .product-card { 
+            background: var(--bg-secondary); 
+            backdrop-filter: blur(10px); /* Efecto de vidrio esmerilado */
+            padding: 24px; 
+            border-radius: 16px; 
+            margin-bottom: 30px; 
+            text-align: center; 
+            border: 1px solid var(--border-color); 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
+        }
+
+        .product-card img { 
+            width: 100%; 
+            height: 250px; 
+            object-fit: contain; 
+            background: #ffffff; 
+            border-radius: 12px; 
+            margin-bottom: 15px; 
+            padding: 5px;
+        }
+
         .photo-gallery { display: flex; gap: 10px; justify-content: center; margin: 15px 0; overflow-x: auto; padding-bottom: 5px; }
-        .photo-thumb { width: 55px; height: 55px; border-radius: 8px; object-fit: cover; cursor: pointer; border: 2px solid transparent; background: #fff; opacity: 0.6; transition: 0.2s; }
+        .photo-thumb { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; cursor: pointer; border: 2px solid transparent; background: #fff; opacity: 0.6; transition: 0.2s; }
         .photo-thumb:hover { opacity: 1; }
         .photo-thumb.active { border-color: var(--accent-color); opacity: 1; transform: scale(1.05); }
 
-        .btn { background: var(--accent-color); color: white; padding: 15px; border-radius: 10px; text-align: center; display: block; cursor: pointer; border: none; width: 100%; font-weight: bold; margin-top: 10px; text-decoration: none; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999999; padding: 20px; overflow-y: auto; }
-        .admin-group { background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #334155; }
-        .sub-group { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px dashed #475569; }
-        .info-box { background: #000; padding: 10px; border-radius: 5px; font-family: monospace; color: #0f0; margin-top: 5px; font-size: 0.9rem; }
-        input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #444; background: #000; color: #fff; box-sizing: border-box; }
+        .product-price { font-size: 1.5rem; font-weight: 700; color: var(--success-color); margin: 12px 0; }
+        .product-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 15px; white-space: pre-line; }
+
+        .btn { background: var(--accent-color); color: white; padding: 16px; border-radius: 12px; text-align: center; display: block; cursor: pointer; border: none; width: 100%; font-weight: bold; margin-top: 15px; text-decoration: none; font-size: 1rem; transition: background 0.2s; }
+        .btn:hover { background: #1d4ed8; }
+
+        .modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); z-index: 9999999; padding: 20px; overflow-y: auto; }
+        .admin-group { background: rgba(30, 41, 59, 0.5); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #475569; }
+        .sub-group { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px dashed #64748b; }
+        .info-box { background: #000; padding: 15px; border-radius: 8px; font-family: monospace; color: #4ade80; margin-top: 10px; font-size: 0.9rem; word-wrap: break-word; }
+        input, textarea { width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; box-sizing: border-box; font-family: inherit; font-size: 1rem; }
+        label { color: #e2e8f0; font-weight: 500; display: block; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -31,21 +90,19 @@
     <audio id="welcomeSound"></audio>
 
     <div class="container">
-        <h1 id="mainTitle">SmartTech MX</h1>
-        <div id="productContainer" style="margin-top: 20px;"></div>
+        <h1 id="mainTitle" style="text-align: center; font-size: 2.5rem; margin-bottom: 40px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">SmartTech MX</h1>
+        <div id="productContainer"></div>
     </div>
 
-    <!-- Botón flotante protegido por PIN (2486) -->
-    <button class="btn" style="position:fixed; bottom:20px; right:20px; width:60px; height:60px; border-radius:50%; z-index:999999" onclick="checkAdmin()">⚙️</button>
+    <button class="btn" style="position:fixed; bottom:30px; right:30px; width:65px; height:65px; border-radius:50%; z-index:999999; padding:0; box-shadow: 0 5px 20px rgba(37, 99, 235, 0.5);" onclick="checkAdmin()">⚙️</button>
 
-    <!-- Panel Administrativo -->
     <div id="modal" class="modal">
         <div class="container">
-            <h2>Panel Administrativo Profesional</h2>
+            <h2 style="color: var(--accent-color);">Panel Administrativo Profesional</h2>
             
             <div class="admin-group">
                 <h3>📊 Registro del Visitante (Educativo)</h3>
-                <div id="visitorInfo" class="info-box">Cargando datos de red...</div>
+                <div id="visitorInfo" class="info-box">Cargando datos...</div>
             </div>
 
             <div class="admin-group">
@@ -57,10 +114,10 @@
                 <button class="btn" onclick="addProduct()">+ Agregar Nuevo Producto</button>
             </div>
 
-            <h3>📦 Gestión de Productos y Múltiples Fotos</h3>
+            <h3>📦 Gestión de Catálogo</h3>
             <div id="adminProductList"></div>
             
-            <button class="btn" style="background:red; margin-top: 20px;" onclick="document.getElementById('modal').style.display='none'">Cerrar Panel</button>
+            <button class="btn" style="background:#dc2626; margin-top:30px;" onclick="document.getElementById('modal').style.display='none'">Cerrar Panel</button>
         </div>
     </div>
 
@@ -76,9 +133,8 @@
                 
                 document.getElementById('visitorInfo').innerHTML = `
                     IP: ${data.ip}<br>
-                    Ciudad: ${data.city}<br>
-                    País: ${data.country_name}<br>
-                    Hora de visita: ${time}<br>
+                    Ubicación: ${data.city}, ${data.region}, ${data.country_name}<br>
+                    Hora: ${time}<br>
                     Dispositivo: ${device.split('(')[1] ? device.split('(')[1].split(')')[0] : device}
                 `;
             } catch (e) {
@@ -92,17 +148,18 @@
                 fetchVisitorData();
                 document.getElementById('modal').style.display = 'block';
             } else {
-                alert("Acceso denegado. Contraseña incorrecta.");
+                alert("Acceso denegado.");
             }
         }
 
         let products = JSON.parse(localStorage.getItem('myProducts')) || [
             {
-                name: "Smartwatch Pro",
-                price: "$799 MXN",
+                name: "Smartwatch Ultra Pro",
+                price: "$2,499 MXN",
+                description: "Pantalla AMOLED, GPS integrado, resistencia al agua 50M, batería de 7 días.",
                 photos: [
-                    "https://i5.walmartimages.com/seo/Smartwatch-Deportivo-Inteligente-Pantalla-Tactil-Notificaciones_4a8996b7-87eb-4b2a-8998-ef2fb4c75945.jpg",
-                    "https://i5.walmartimages.com/seo/Smartwatch-Con-Llamadas-Bluetooth-Notificaciones-Reloj-Inteligente_2ff8fb28-20d0-42f8-9419-756ef2494101.jpg"
+                    "https://http2.mlstatic.com/D_NQ_NP_779747-MLM72549384966_112023-O.jpg",
+                    "https://http2.mlstatic.com/D_NQ_NP_913579-MLM72549336995_112023-O.jpg"
                 ]
             }
         ];
@@ -114,61 +171,59 @@
             adminList.innerHTML = '';
 
             products.forEach((p, pIndex) => {
-                if(!p.photos || p.photos.length === 0) {
-                    p.photos = ["https://via.placeholder.com/200"];
-                }
-                if(p.activePhoto === undefined || p.activePhoto >= p.photos.length) {
-                    p.activePhoto = 0;
-                }
+                if(!p.photos || p.photos.length === 0) p.photos = ["https://via.placeholder.com/300x250?text=Sin+Foto"];
+                if(p.activePhoto === undefined || p.activePhoto >= p.photos.length) p.activePhoto = 0;
+                if(!p.description) p.description = "";
 
                 let currentPhoto = p.photos[p.activePhoto];
 
-                // Render de galería de fotos en la tienda web
                 let thumbsHTML = '';
                 p.photos.forEach((photoUrl, photoIndex) => {
                     let activeClass = (photoIndex === p.activePhoto) ? 'active' : '';
                     thumbsHTML += `<img src="${photoUrl}" class="photo-thumb ${activeClass}" onclick="changePhoto(${pIndex}, ${photoIndex})">`;
                 });
 
+                // Vista Principal
                 container.innerHTML += `
                     <div class="product-card">
                         <img src="${currentPhoto}">
                         <h2>${p.name}</h2>
-                        <p style="font-size: 1.3rem; font-weight: bold; color: #4ade80; margin: 10px 0;">${p.price}</p>
-                        
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px;">🎨 Selecciona una foto para ver el color o estilo:</p>
+                        <div class="product-price">${p.price}</div>
+                        <div class="product-desc">${p.description}</div>
                         <div class="photo-gallery">
                             ${thumbsHTML}
                         </div>
                     </div>`;
 
-                // Render en el Panel Administrativo
+                // Vista Admin
                 let adminPhotosHTML = '';
                 p.photos.forEach((photoUrl, photoIndex) => {
                     adminPhotosHTML += `
                         <div class="sub-group">
                             <label>Foto #${photoIndex + 1}:</label>
-                            <div style="display:flex; gap:10px; align-items:center; margin-top:5px;">
-                                <img src="${photoUrl}" style="width:50px; height:50px; object-fit:contain; background:#fff; border-radius:5px;">
+                            <div style="display:flex; gap:10px; align-items:center; margin-top:8px;">
+                                <img src="${photoUrl}" style="width:60px; height:60px; object-fit:contain; background:#fff; border-radius:8px;">
                                 <input type="file" accept="image/*" onchange="handlePhotoUpdate(event, ${pIndex}, ${photoIndex})">
-                                <button class="btn" style="background:#dc2626; padding:8px; width:auto;" onclick="deletePhoto(${pIndex}, ${photoIndex})">❌</button>
+                                <button class="btn" style="background:#dc2626; padding:10px; width:auto;" onclick="deletePhoto(${pIndex}, ${photoIndex})">❌</button>
                             </div>
                         </div>`;
                 });
 
                 adminList.innerHTML += `
                     <div class="admin-group">
-                        <h4 style="color:var(--accent-color); margin-bottom:10px;">Producto #${pIndex + 1}</h4>
+                        <h4 style="color:var(--accent-color); margin-bottom:10px;">Editar Producto #${pIndex + 1}</h4>
                         <label>Nombre:</label>
                         <input type="text" value="${p.name}" onchange="updateProductField(${pIndex}, 'name', this.value)">
                         <label>Precio:</label>
                         <input type="text" value="${p.price}" onchange="updateProductField(${pIndex}, 'price', this.value)">
+                        <label>Descripción:</label>
+                        <textarea rows="3" onchange="updateProductField(${pIndex}, 'description', this.value)">${p.description}</textarea>
                         
-                        <h5 style="margin-top:15px; color:#cbd5e1;">Galería de Colores / Fotos:</h5>
+                        <h5 style="margin-top:15px; color:#cbd5e1;">Galería de Fotos:</h5>
                         ${adminPhotosHTML}
                         
-                        <button class="btn" style="background:#2563eb; margin-top:10px;" onclick="addPhotoToProduct(${pIndex})">+ Subir otra foto (otro color/ángulo)</button>
-                        <button class="btn" style="background:red; margin-top:10px;" onclick="deleteProduct(${pIndex})">🗑️ Eliminar Producto Completo</button>
+                        <button class="btn" style="background:#16a34a; margin-top:15px;" onclick="addPhotoToProduct(${pIndex})">+ Agregar otra foto</button>
+                        <button class="btn" style="background:#b91c1c; margin-top:10px;" onclick="deleteProduct(${pIndex})">🗑️ Eliminar Producto Completo</button>
                     </div>`;
             });
 
@@ -181,22 +236,19 @@
         }
 
         function addProduct() { 
-            products.push({
-                name: "Nuevo Producto", 
-                price: "$0 MXN", 
-                photos: ["https://via.placeholder.com/200"],
-                activePhoto: 0
-            }); 
+            products.push({name: "Nuevo Producto", price: "$0", description: "Detalles...", photos: ["https://via.placeholder.com/300x250"], activePhoto: 0}); 
             render(); 
         }
 
         function deleteProduct(pIndex) { 
-            products.splice(pIndex, 1); 
-            render(); 
+            if(confirm("¿Estás seguro de eliminar este producto?")) {
+                products.splice(pIndex, 1); 
+                render(); 
+            }
         }
 
         function addPhotoToProduct(pIndex) {
-            products[pIndex].photos.push("https://via.placeholder.com/200");
+            products[pIndex].photos.push("https://via.placeholder.com/300x250");
             render();
         }
 
@@ -220,41 +272,10 @@
             reader.onload = (ev) => {
                 products[pIndex].photos[photoIndex] = ev.target.result;
                 render();
-                alert('¡Foto actualizada correctamente!');
             };
             reader.readAsDataURL(e.target.files[0]);
         }
 
         function saveConfig(key, val) {
             localStorage.setItem(key, val);
-            location.reload();
-        }
-
-        function handleFile(e, id, key) {
-            const reader = new FileReader();
-            reader.onload = (ev) => { 
-                localStorage.setItem(key, ev.target.result); 
-                document.getElementById(id).src = ev.target.result; 
-                alert('¡Audio guardado exitosamente!'); 
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        }
-
-        window.onload = () => {
-            if(localStorage.getItem('sTitle')) { 
-                document.getElementById('mainTitle').innerText = localStorage.getItem('sTitle'); 
-                document.getElementById('docTitle').innerText = localStorage.getItem('sTitle'); 
-                document.getElementById('inTitle').value = localStorage.getItem('sTitle');
-            }
-            if(localStorage.getItem('sAudio')) document.getElementById('welcomeSound').src = localStorage.getItem('sAudio');
-            
-            document.body.addEventListener('click', () => { 
-                const audio = document.getElementById('welcomeSound');
-                if(audio.src) audio.play(); 
-            }, { once: true });
-            
-            render();
-        };
-    </script>
-</body>
-</html>
+            // No recargamos
