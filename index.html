@@ -3,83 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartTech MX - Panel Administrativo</title>
+    <title>SmartTech MX</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f9;
-            color: #333;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #fff;
-            padding: 15px 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border-radius: 8px;
-        }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f9; color: #333; }
+        header { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         h1 { margin: 0; color: #2c3e50; }
-        button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+        button { background-color: #3498db; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
         button:hover { background-color: #2980b9; }
-        
-        .container {
-            margin-top: 20px;
-        }
-
-        /* Estilo del Panel Administrativo (Oculto por defecto) */
-        #panelAdministrativo {
-            display: none;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-top: 20px;
-        }
-
-        /* Estilos del Modal de Acceso */
-        #modalAdminLogin {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            width: 300px;
-        }
-        .modal-content input {
-            width: 80%;
-            padding: 10px;
-            margin: 15px 0;
-            text-align: center;
-            font-size: 18px;
-            letter-spacing: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .modal-buttons {
-            display: flex;
-            justify-content: space-around;
-            gap: 10px;
-        }
+        .container { margin-top: 20px; }
+        #panelAdministrativo { display: none; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 20px; }
+        #modalAdminLogin { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 30px; border-radius: 8px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); width: 300px; }
+        .modal-content input { width: 80%; padding: 10px; margin: 15px 0; text-align: center; font-size: 18px; letter-spacing: 5px; border: 1px solid #ccc; border-radius: 4px; }
+        .modal-buttons { display: flex; justify-content: space-around; gap: 10px; }
         .btn-cerrar { background-color: #e74c3c; }
         .btn-cerrar:hover { background-color: #c0392b; }
     </style>
@@ -88,74 +24,48 @@
 
     <header>
         <h1>SmartTech MX</h1>
-        <!-- Botón para abrir el panel de administración -->
         <button onclick="mostrarModalAdmin()">⚙️ Entrar a Admin</button>
     </header>
 
     <div class="container">
-        <!-- Sección pública de ejemplo -->
         <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-            <h3>📊 Registro del Visitante (Educativo)</h3>
+            <h3>📊 Registro del Visitante</h3>
             <div id="visitanteStatus">Cargando datos...</div>
         </div>
 
-        <!-- Panel Administrativo Protegido -->
         <div id="panelAdministrativo">
             <h2>Panel Administrativo Profesional</h2>
             <hr>
             <h3>⚙️ Configuración del Sitio</h3>
-            <p>Aquí puedes gestionar tus configuraciones y catálogos.</p>
-            
             <div style="margin-top: 20px;">
                 <label>Cambiar título de la tienda:</label><br>
                 <input type="text" id="inputTitulo" placeholder="Nuevo nombre" style="padding: 8px; margin-top: 5px;">
                 <button onclick="saveConfig('nombreTienda', document.getElementById('inputTitulo').value)">Guardar</button>
             </div>
-
             <div style="margin-top: 20px;">
-                <button class="btn-cerrar" onclick="cerrarSesionAdmin()">Cerrar Sesión de Administrador</button>
+                <button class="btn-cerrar" onclick="cerrarSesionAdmin()">Cerrar Sesión</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal para ingresar el PIN -->
     <div id="modalAdminLogin">
         <div class="modal-content">
             <h3>Acceso Restringido</h3>
-            <p>Ingresa el PIN de administrador:</p>
+            <p>Ingresa el PIN (2486):</p>
             <input type="password" id="adminPinInput" maxlength="4" placeholder="••••">
             <div class="modal-buttons">
                 <button class="btn-cerrar" onclick="cerrarModalAdmin()">Cancelar</button>
                 <button onclick="verificarPinAdmin()">Ingresar</button>
             </div>
         </div>
-    </div>
-
-    <script>
-        // Función para guardar configuraciones en localStorage
+    </div><script>
         function saveConfig(key, val) {
-            if (!val) {
-                alert("Por favor escribe un valor.");
-                return;
-            }
+            if (!val) { alert("Escribe un valor."); return; }
             localStorage.setItem(key, val);
-            alert("¡Guardado correctamente!");
+            alert("Guardado correctamente.");
             location.reload();
         }
 
-        // Función para manejar archivos locales (imágenes, etc.)
-        function handleFile(e, id, key) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                localStorage.setItem(key, event.target.result);
-                location.reload();
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // Función para mostrar el modal de contraseña
         function mostrarModalAdmin() {
             if (localStorage.getItem("adminLogueado") === "true") {
                 abrirPanelDirecto();
@@ -165,38 +75,29 @@
             if (modal) {
                 modal.style.display = 'flex';
                 const input = document.getElementById('adminPinInput');
-                if (input) {
-                    input.value = '';
-                    input.focus();
-                }
+                if (input) { input.value = ''; input.focus(); }
             }
         }
 
-        // Función para cerrar el modal sin iniciar sesión
         function cerrarModalAdmin() {
             const modal = document.getElementById('modalAdminLogin');
             if (modal) modal.style.display = 'none';
         }
 
-        // Función que valida el PIN (2486)
         function verificarPinAdmin() {
             const pinInput = document.getElementById('adminPinInput');
             if (!pinInput) return;
-            
-            const pinIngresado = pinInput.value.trim();
-            
-            if (pinIngresado === "2486") {
+            if (pinInput.value.trim() === "2486") {
                 localStorage.setItem("adminLogueado", "true");
                 cerrarModalAdmin();
                 abrirPanelDirecto();
             } else {
-                alert("PIN incorrecto. Acceso denegado.");
+                alert("PIN incorrecto.");
                 pinInput.value = '';
                 pinInput.focus();
             }
         }
 
-        // Función que despliega el panel administrativo
         function abrirPanelDirecto() {
             const panel = document.getElementById('panelAdministrativo');
             if (panel) {
@@ -205,20 +106,140 @@
             }
         }
 
-        // Función para salir del modo administrador
         function cerrarSesionAdmin() {
             localStorage.removeItem("adminLogueado");
             location.reload();
         }
 
-        // Mantener sesión abierta y cargar configuraciones guardadas al iniciar
         window.onload = function() {
             if (localStorage.getItem("adminLogueado") === "true") {
                 const panel = document.getElementById('panelAdministrativo');
                 if (panel) panel.style.display = 'block';
             }
-            
-            // Simular carga de visitante
+            document.getElementById('visitanteStatus').innerText = "Sistema activo y conectado.";
+        };
+    </script>
+</body>
+</html><script>
+        function saveConfig(key, val) {
+            if (!val) { alert("Escribe un valor."); return; }
+            localStorage.setItem(key, val);
+            alert("Guardado correctamente.");
+            location.reload();
+        }
+
+        function mostrarModalAdmin() {
+            if (localStorage.getItem("adminLogueado") === "true") {
+                abrirPanelDirecto();
+                return;
+            }
+            const modal = document.getElementById('modalAdminLogin');
+            if (modal) {
+                modal.style.display = 'flex';
+                const input = document.getElementById('adminPinInput');
+                if (input) { input.value = ''; input.focus(); }
+            }
+        }
+
+        function cerrarModalAdmin() {
+            const modal = document.getElementById('modalAdminLogin');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function verificarPinAdmin() {
+            const pinInput = document.getElementById('adminPinInput');
+            if (!pinInput) return;
+            if (pinInput.value.trim() === "2486") {
+                localStorage.setItem("adminLogueado", "true");
+                cerrarModalAdmin();
+                abrirPanelDirecto();
+            } else {
+                alert("PIN incorrecto.");
+                pinInput.value = '';
+                pinInput.focus();
+            }
+        }
+
+        function abrirPanelDirecto() {
+            const panel = document.getElementById('panelAdministrativo');
+            if (panel) {
+                panel.style.display = 'block';
+                panel.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function cerrarSesionAdmin() {
+            localStorage.removeItem("adminLogueado");
+            location.reload();
+        }
+
+        window.onload = function() {
+            if (localStorage.getItem("adminLogueado") === "true") {
+                const panel = document.getElementById('panelAdministrativo');
+                if (panel) panel.style.display = 'block';
+            }
+            document.getElementById('visitanteStatus').innerText = "Sistema activo y conectado.";
+        };
+    </script>
+</body>
+</html><script>
+        function saveConfig(key, val) {
+            if (!val) { alert("Escribe un valor."); return; }
+            localStorage.setItem(key, val);
+            alert("Guardado correctamente.");
+            location.reload();
+        }
+
+        function mostrarModalAdmin() {
+            if (localStorage.getItem("adminLogueado") === "true") {
+                abrirPanelDirecto();
+                return;
+            }
+            const modal = document.getElementById('modalAdminLogin');
+            if (modal) {
+                modal.style.display = 'flex';
+                const input = document.getElementById('adminPinInput');
+                if (input) { input.value = ''; input.focus(); }
+            }
+        }
+
+        function cerrarModalAdmin() {
+            const modal = document.getElementById('modalAdminLogin');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function verificarPinAdmin() {
+            const pinInput = document.getElementById('adminPinInput');
+            if (!pinInput) return;
+            if (pinInput.value.trim() === "2486") {
+                localStorage.setItem("adminLogueado", "true");
+                cerrarModalAdmin();
+                abrirPanelDirecto();
+            } else {
+                alert("PIN incorrecto.");
+                pinInput.value = '';
+                pinInput.focus();
+            }
+        }
+
+        function abrirPanelDirecto() {
+            const panel = document.getElementById('panelAdministrativo');
+            if (panel) {
+                panel.style.display = 'block';
+                panel.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function cerrarSesionAdmin() {
+            localStorage.removeItem("adminLogueado");
+            location.reload();
+        }
+
+        window.onload = function() {
+            if (localStorage.getItem("adminLogueado") === "true") {
+                const panel = document.getElementById('panelAdministrativo');
+                if (panel) panel.style.display = 'block';
+            }
             document.getElementById('visitanteStatus').innerText = "Sistema activo y conectado.";
         };
     </script>
