@@ -287,3 +287,54 @@
         function handleFile(e, id, key) {
             const reader = new FileReader();
             reader.
+
+                // Función para mostrar el modal de contraseña
+function mostrarModalAdmin() {
+    // Si ya inició sesión antes, puedes omitir el PIN y abrir directo el panel (opcional)
+    if (localStorage.getItem("adminLogueado") === "true") {
+        abrirPanelDirecto();
+        return;
+    }
+    document.getElementById('modalAdminLogin').style.display = 'flex';
+    document.getElementById('adminPinInput').value = '';
+    document.getElementById('adminPinInput').focus();
+}
+
+// Función para cerrar el modal
+function cerrarModalAdmin() {
+    document.getElementById('modalAdminLogin').style.display = 'none';
+}
+
+// Función que valida el PIN 2486
+function verificarPinAdmin() {
+    const pinIngresado = document.getElementById('adminPinInput').value.trim();
+    
+    if (pinIngresado === "2486") {
+        localStorage.setItem("adminLogueado", "true"); // Guarda la sesión
+        cerrarModalAdmin();
+        abrirPanelDirecto();
+    } else {
+        alert("PIN incorrecto. Acceso denegado.");
+        document.getElementById('adminPinInput').value = '';
+        document.getElementById('adminPinInput').focus();
+    }
+}
+
+// Función que despliega el panel administrativo real en tu página
+function abrirPanelDirecto() {
+    const panel = document.getElementById('panelAdministrativo');
+    if (panel) {
+        panel.style.display = 'block';
+        panel.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        alert("¡PIN correcto! (Asegúrate de que tu contenedor principal del panel tenga id='panelAdministrativo')");
+    }
+}
+
+// Opcional: Si quieres que al recargar la página conserve el panel abierto si ya puso el PIN
+window.onload = function() {
+    if (localStorage.getItem("adminLogueado") === "true") {
+        const panel = document.getElementById('panelAdministrativo');
+        if (panel) panel.style.display = 'block';
+    }
+};
