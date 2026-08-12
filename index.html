@@ -5,16 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="docTitle">SmartTech MX</title>
     <style>
-        :root { --bg-primary: #070913; --bg-secondary: #0f172a; --accent-color: #3b82f6; --text-main: #f8fafc; }
+        :root { --bg-primary: #070913; --bg-secondary: #0f172a; --accent-color: #3b82f6; --text-main: #f8fafc; --text-muted: #94a3b8; }
         body { font-family: sans-serif; background: var(--bg-primary); color: var(--text-main); margin: 0; padding-bottom: 100px; }
         .container { max-width: 900px; margin: auto; padding: 20px; }
-        .product-card { background: var(--bg-secondary); padding: 20px; border-radius: 20px; margin-bottom: 20px; text-align: center; border: 1px solid #1e293b; }
-        .product-card img { width: 100%; height: 200px; object-fit: contain; background: white; border-radius: 10px; margin-bottom: 10px; }
+        
+        .product-card { background: var(--bg-secondary); padding: 20px; border-radius: 20px; margin-bottom: 25px; text-align: center; border: 1px solid #1e293b; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .product-card img { width: 100%; height: 240px; object-fit: contain; background: white; border-radius: 12px; margin-bottom: 15px; }
+        
+        /* Galería de fotos múltiples por producto */
+        .photo-gallery { display: flex; gap: 10px; justify-content: center; margin: 15px 0; overflow-x: auto; padding-bottom: 5px; }
+        .photo-thumb { width: 55px; height: 55px; border-radius: 8px; object-fit: cover; cursor: pointer; border: 2px solid transparent; background: #fff; opacity: 0.6; transition: 0.2s; }
+        .photo-thumb:hover { opacity: 1; }
+        .photo-thumb.active { border-color: var(--accent-color); opacity: 1; transform: scale(1.05); }
+
         .btn { background: var(--accent-color); color: white; padding: 15px; border-radius: 10px; text-align: center; display: block; cursor: pointer; border: none; width: 100%; font-weight: bold; margin-top: 10px; text-decoration: none; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999999; padding: 20px; overflow-y: auto; }
-        .admin-group { background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .admin-group { background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #334155; }
+        .sub-group { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px dashed #475569; }
         .info-box { background: #000; padding: 10px; border-radius: 5px; font-family: monospace; color: #0f0; margin-top: 5px; font-size: 0.9rem; }
-        input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #444; background: #000; color: #fff; }
+        input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #444; background: #000; color: #fff; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -26,32 +35,29 @@
         <div id="productContainer" style="margin-top: 20px;"></div>
     </div>
 
-    <!-- Botón flotante protegido -->
+    <!-- Botón flotante protegido por PIN (2486) -->
     <button class="btn" style="position:fixed; bottom:20px; right:20px; width:60px; height:60px; border-radius:50%; z-index:999999" onclick="checkAdmin()">⚙️</button>
 
     <!-- Panel Administrativo -->
     <div id="modal" class="modal">
         <div class="container">
-            <h2>Panel Administrativo Total</h2>
+            <h2>Panel Administrativo Profesional</h2>
             
-            <!-- 1. Datos Educativos del Visitante -->
             <div class="admin-group">
                 <h3>📊 Registro del Visitante (Educativo)</h3>
                 <div id="visitorInfo" class="info-box">Cargando datos de red...</div>
             </div>
 
-            <!-- 2. Configuración General de la Página -->
             <div class="admin-group">
                 <h3>⚙️ Configuración del Sitio</h3>
                 <label>Nombre de la Página:</label>
                 <input type="text" id="inTitle" onchange="saveConfig('sTitle', this.value)">
-                <label>Sonido de Bienvenida (Elegir archivo del celular):</label>
+                <label>Sonido de Bienvenida (Elegir archivo):</label>
                 <input type="file" accept="audio/*" onchange="handleFile(event, 'welcomeSound', 'sAudio')">
                 <button class="btn" onclick="addProduct()">+ Agregar Nuevo Producto</button>
             </div>
 
-            <!-- 3. Lista de Productos Dinámicos -->
-            <h3>📦 Gestión de Productos</h3>
+            <h3>📦 Gestión de Productos y Múltiples Fotos</h3>
             <div id="adminProductList"></div>
             
             <button class="btn" style="background:red; margin-top: 20px;" onclick="document.getElementById('modal').style.display='none'">Cerrar Panel</button>
@@ -61,7 +67,6 @@
     <script>
         const PASSWORD_SEGURA = "2486"; 
 
-        // Obtener datos del visitante para fines educativos
         async function fetchVisitorData() {
             try {
                 const response = await fetch('https://ipapi.co/json/');
@@ -91,7 +96,16 @@
             }
         }
 
-        let products = JSON.parse(localStorage.getItem('myProducts')) || [];
+        let products = JSON.parse(localStorage.getItem('myProducts')) || [
+            {
+                name: "Smartwatch Pro",
+                price: "$799 MXN",
+                photos: [
+                    "https://i5.walmartimages.com/seo/Smartwatch-Deportivo-Inteligente-Pantalla-Tactil-Notificaciones_4a8996b7-87eb-4b2a-8998-ef2fb4c75945.jpg",
+                    "https://i5.walmartimages.com/seo/Smartwatch-Con-Llamadas-Bluetooth-Notificaciones-Reloj-Inteligente_2ff8fb28-20d0-42f8-9419-756ef2494101.jpg"
+                ]
+            }
+        ];
 
         function render() {
             const container = document.getElementById('productContainer');
@@ -99,28 +113,116 @@
             container.innerHTML = '';
             adminList.innerHTML = '';
 
-            products.forEach((p, i) => {
-                // Vista principal de la tienda
+            products.forEach((p, pIndex) => {
+                if(!p.photos || p.photos.length === 0) {
+                    p.photos = ["https://via.placeholder.com/200"];
+                }
+                if(p.activePhoto === undefined || p.activePhoto >= p.photos.length) {
+                    p.activePhoto = 0;
+                }
+
+                let currentPhoto = p.photos[p.activePhoto];
+
+                // Render de galería de fotos en la tienda web
+                let thumbsHTML = '';
+                p.photos.forEach((photoUrl, photoIndex) => {
+                    let activeClass = (photoIndex === p.activePhoto) ? 'active' : '';
+                    thumbsHTML += `<img src="${photoUrl}" class="photo-thumb ${activeClass}" onclick="changePhoto(${pIndex}, ${photoIndex})">`;
+                });
+
                 container.innerHTML += `
                     <div class="product-card">
-                        <img src="${p.img}">
+                        <img src="${currentPhoto}">
                         <h2>${p.name}</h2>
-                        <p>${p.price}</p>
+                        <p style="font-size: 1.3rem; font-weight: bold; color: #4ade80; margin: 10px 0;">${p.price}</p>
+                        
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px;">🎨 Selecciona una foto para ver el color o estilo:</p>
+                        <div class="photo-gallery">
+                            ${thumbsHTML}
+                        </div>
                     </div>`;
-                
-                // Vista dentro del panel administrativo
+
+                // Render en el Panel Administrativo
+                let adminPhotosHTML = '';
+                p.photos.forEach((photoUrl, photoIndex) => {
+                    adminPhotosHTML += `
+                        <div class="sub-group">
+                            <label>Foto #${photoIndex + 1}:</label>
+                            <div style="display:flex; gap:10px; align-items:center; margin-top:5px;">
+                                <img src="${photoUrl}" style="width:50px; height:50px; object-fit:contain; background:#fff; border-radius:5px;">
+                                <input type="file" accept="image/*" onchange="handlePhotoUpdate(event, ${pIndex}, ${photoIndex})">
+                                <button class="btn" style="background:#dc2626; padding:8px; width:auto;" onclick="deletePhoto(${pIndex}, ${photoIndex})">❌</button>
+                            </div>
+                        </div>`;
+                });
+
                 adminList.innerHTML += `
                     <div class="admin-group">
-                        <label>Nombre del Producto:</label>
-                        <input type="text" value="${p.name}" onchange="updateProd(${i}, 'name', this.value)">
+                        <h4 style="color:var(--accent-color); margin-bottom:10px;">Producto #${pIndex + 1}</h4>
+                        <label>Nombre:</label>
+                        <input type="text" value="${p.name}" onchange="updateProductField(${pIndex}, 'name', this.value)">
                         <label>Precio:</label>
-                        <input type="text" value="${p.price}" onchange="updateProd(${i}, 'price', this.value)">
-                        <label>Foto (Elegir de galería):</label>
-                        <input type="file" accept="image/*" onchange="handleProdImage(event, ${i})">
-                        <button class="btn" style="background:red; margin-top: 10px;" onclick="deleteProd(${i})">Eliminar Este Producto</button>
+                        <input type="text" value="${p.price}" onchange="updateProductField(${pIndex}, 'price', this.value)">
+                        
+                        <h5 style="margin-top:15px; color:#cbd5e1;">Galería de Colores / Fotos:</h5>
+                        ${adminPhotosHTML}
+                        
+                        <button class="btn" style="background:#2563eb; margin-top:10px;" onclick="addPhotoToProduct(${pIndex})">+ Subir otra foto (otro color/ángulo)</button>
+                        <button class="btn" style="background:red; margin-top:10px;" onclick="deleteProduct(${pIndex})">🗑️ Eliminar Producto Completo</button>
                     </div>`;
             });
+
             localStorage.setItem('myProducts', JSON.stringify(products));
+        }
+
+        function changePhoto(pIndex, photoIndex) {
+            products[pIndex].activePhoto = photoIndex;
+            render();
+        }
+
+        function addProduct() { 
+            products.push({
+                name: "Nuevo Producto", 
+                price: "$0 MXN", 
+                photos: ["https://via.placeholder.com/200"],
+                activePhoto: 0
+            }); 
+            render(); 
+        }
+
+        function deleteProduct(pIndex) { 
+            products.splice(pIndex, 1); 
+            render(); 
+        }
+
+        function addPhotoToProduct(pIndex) {
+            products[pIndex].photos.push("https://via.placeholder.com/200");
+            render();
+        }
+
+        function deletePhoto(pIndex, photoIndex) {
+            if(products[pIndex].photos.length <= 1) {
+                alert("El producto debe tener al menos una foto.");
+                return;
+            }
+            products[pIndex].photos.splice(photoIndex, 1);
+            products[pIndex].activePhoto = 0;
+            render();
+        }
+
+        function updateProductField(pIndex, key, val) {
+            products[pIndex][key] = val;
+            localStorage.setItem('myProducts', JSON.stringify(products));
+        }
+
+        function handlePhotoUpdate(e, pIndex, photoIndex) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                products[pIndex].photos[photoIndex] = ev.target.result;
+                render();
+                alert('¡Foto actualizada correctamente!');
+            };
+            reader.readAsDataURL(e.target.files[0]);
         }
 
         function saveConfig(key, val) {
@@ -136,31 +238,6 @@
                 alert('¡Audio guardado exitosamente!'); 
             };
             reader.readAsDataURL(e.target.files[0]);
-        }
-
-        function handleProdImage(e, index) {
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                products[index].img = ev.target.result;
-                render();
-                alert('¡Imagen del producto actualizada!');
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        }
-
-        function addProduct() { 
-            products.push({name: "Nuevo Producto", price: "$0", img: "https://via.placeholder.com/200"}); 
-            render(); 
-        }
-
-        function deleteProd(i) { 
-            products.splice(i, 1); 
-            render(); 
-        }
-
-        function updateProd(index, key, val) { 
-            products[index][key] = val; 
-            localStorage.setItem('myProducts', JSON.stringify(products));
         }
 
         window.onload = () => {
@@ -180,4 +257,4 @@
         };
     </script>
 </body>
-    </html>
+</html>
