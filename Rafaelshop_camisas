@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111827">
+  <title>Camisas Mayoreo | Tu tienda</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+    }
+    header {
+      background: #111827;
+      color: white;
+      padding: 24px 16px;
+      text-align: center;
+    }
+    header h1 { margin: 0 0 8px; }
+    header p { margin: 0; color: #d1d5db; }
+    .hero {
+      padding: 28px 16px;
+      text-align: center;
+      background: white;
+    }
+    .hero h2 { margin-top: 0; font-size: 26px; }
+    .wrap {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px 14px;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .card, .cart {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 3px 12px #0000000b;
+    }
+    .photo {
+      height: 150px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: #e5e7eb;
+      font-size: 64px;
+    }
+    .card h3 { margin-bottom: 6px; }
+    .price {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      margin: 10px 0 5px;
+    }
+    select, input {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: white;
+      font-size: 16px;
+    }
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .add {
+      width: 100%;
+      background: #111827;
+      color: white;
+      margin-top: 14px;
+    }
+    .remove {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 7px 10px;
+      margin-top: 6px;
+    }
+    .cart { margin-top: 24px; }
+    .item {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 12px 0;
+    }
+    .total { font-size: 24px; font-weight: bold; }
+    .send {
+      width: 100%;
+      color: white;
+      background: #15803d;
+      margin-top: 12px;
+    }
+    .hint { color: #6b7280; font-size: 13px; }
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CAMISAS MAYOREO</h1>
+    <p>Tu estilo, tu negocio, mejores precios</p>
+  </header>
+
+  <section class="hero">
+    <h2>Encuentra tus camisas favoritas</h2>
+    <p>Elige tus modelos, tallas y cantidades.</p>
+  </section>
+
+  <main class="wrap">
+    <h2>Catálogo</h2>
+    <div class="products" id="products"></div>
+
+    <section class="cart" id="cart">
+      <h2>Tu pedido</h2>
+      <div id="items">Todavía no agregas camisas.</div>
+      <p class="total">Total: <span id="total">$0.00</span> MXN</p>
+
+      <label for="customer">Tu nombre</label>
+      <input id="customer" placeholder="Escribe tu nombre">
+
+      <label for="city">Ciudad o municipio</label>
+      <input id="city" placeholder="¿De dónde nos contactas?">
+
+      <label for="notes">Comentarios del pedido</label>
+      <input id="notes" placeholder="Ej. Quiero saber el costo de envío">
+
+      <button class="send" onclick="sendOrder()">
+        Pedir por WhatsApp
+      </button>
+      <p class="hint">
+        El pedido se abrirá en WhatsApp para que puedas revisarlo
+        y enviarlo. El envío y la disponibilidad se confirman aparte.
+      </p>
+    </section>
+  </main>
+
+  <footer>© <span id="year"></span> Camisas Mayoreo</footer>
+
+  <script>
+    // PERSONALIZA AQUÍ LOS PRODUCTOS Y PRECIOS.
+    const products = [
+      {
+        id: 1,
+        name: "Camisa estampada",
+        price: 80,
+        sizes: ["CH", "M", "G", "XG"],
+        colors: ["Negro", "Blanco", "Azul"],
+        emoji: "👕"
+      },
+      {
+        id: 2,
+        name: "Camisa manga larga",
+        price: 100,
+        sizes: ["CH", "M", "G", "XG"],
+        colors: ["Negro", "Blanco", "Gris"],
+        emoji: "👔"
+      },
+      {
+        id: 3,
+        name: "Camisa gruesa premium",
+        price: 120,
+        sizes: ["CH", "M", "G", "XG"],
+        colors: ["Negro", "Blanco", "Verde"],
+        emoji: "👕"
+      }
+    ];
+
+    // Escribe aquí tu WhatsApp con código de país.
+    // México: 52 + número de 10 dígitos, sin + ni espacios.
+    const WHATSAPP = "521XXXXXXXXXX";
+
+    let cart = [];
+
+    function money(n) {
+      return n.toLocaleString("es-MX", {
+        style: "currency",
+        currency: "MXN"
+      });
+    }
+
+    function renderProducts() {
+      document.getElementById("products").innerHTML =
+        products.map(p => `
+          <article class="card">
+            <div class="photo">${p.emoji}</div>
+            <h3>${p.name}</h3>
+            <p class="price">${money(p.price)} <small>por pieza</small></p>
+
+            <label for="size-${p.id}">Talla</label>
+            <select id="size-${p.id}">
+              ${p.sizes.map(s => `<option>${s}</option>`).join("")}
+            </select>
+
+            <label for="color-${p.id}">Color</label>
+            <select id="color-${p.id}">
+              ${p.colors.map(c => `<option>${c}</option>`).join("")}
+            </select>
+
+            <label for="qty-${p.id}">Cantidad</label>
+            <input id="qty-${p.id}" type="number"
+              min="1" max="500" value="1">
+
+            <button class="add" onclick="addToCart(${p.id})">
+              Agregar al pedido
+            </button>
+          </article>
+        `).join("");
+    }
+
+    function addToCart(id) {
+      const p = products.find(x => x.id === id);
+      const size = document.getElementById(`size-${id}`).value;
+      const color = document.getElementById(`color-${id}`).value;
+      const qty = Number(document.getElementById(`qty-${id}`).value);
+
+      if (!Number.isInteger(qty) || qty < 1 || qty > 500) {
+        alert("Escribe una cantidad entre 1 y 500.");
+        return;
+      }
+
+      cart.push({
+        id, name: p.name, price: p.price, size, color, qty
+      });
+
+      renderCart();
+      document.getElementById("cart").scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+
+    function renderCart() {
+      const el = document.getElementById("items");
+
+      if (cart.length === 0) {
+        el.textContent = "Todavía no agregas camisas.";
+      } else {
+        el.innerHTML = cart.map((x, i) => `
+          <div class="item">
+            <strong>${x.name}</strong><br>
+            Talla: ${x.size} · Color: ${x.color}<br>
+            Cantidad: ${x.qty} · ${money(x.price * x.qty)}
+            <br>
+            <button class="remove" onclick="removeItem(${i})">
+              Quitar
+            </button>
+          </div>
+        `).join("");
+      }
+
+      document.getElementById("total").textContent =
+        money(cart.reduce((sum, x) => sum + x.price * x.qty, 0));
+    }
+
+    function removeItem(i) {
+      cart.splice(i, 1);
+      renderCart();
+    }
+
+    function sendOrder() {
+      if (cart.length === 0) {
+        alert("Primero agrega camisas a tu pedido.");
+        return;
+      }
+
+      const name = document.getElementById("customer").value.trim();
+      const city = document.getElementById("city").value.trim();
+      const notes = document.getElementById("notes").value.trim();
+
+      if (!name || !city) {
+        alert("Escribe tu nombre y ciudad para continuar.");
+        return;
+      }
+
+      if (!/^52\d{10}$/.test(WHATSAPP)) {
+        alert("El dueño debe configurar su número de WhatsApp en el código.");
+        return;
+      }
+
+      const lines = cart.map(x =>
+        `- ${x.name} | Talla ${x.size} | ${x.color} | ${x.qty} pza(s) | ${money(x.price * x.qty)}`
+      );
+
+      const total = cart.reduce((sum, x) =>
+        sum + x.price * x.qty, 0);
+
+      const message = [
+        "¡Hola! Quiero realizar un pedido de camisas.",
+        "",
+        `Nombre: ${name}`,
+        `Ciudad: ${city}`,
+        "",
+        ...lines,
+        "",
+        `Total estimado de productos: ${money(total)}`,
+        `Comentarios: ${notes || "Ninguno"}`,
+        "",
+        "Quiero confirmar disponibilidad y envío."
+      ].join("\n");
+
+      const url = "https://wa.me/" + WHATSAPP +
+        "?text=" + encodeURIComponent(message);
+
+      window.open(url, "_blank");
+    }
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    renderProducts();
+    renderCart();
+  </script>
+</body>
+</html>
